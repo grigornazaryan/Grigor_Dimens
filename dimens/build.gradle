@@ -52,44 +52,4 @@ afterEvaluate {
         }
     }
 }
-public class SDPFactory extends DefaultTask {
 
-    @Input
-    String unit = "sp"
-    @Input
-    double positiveMax = 600
-    @Input
-    double negativeMax = 60
-
-    @TaskAction
-    def create() {
-        String resFolder =  project.getProjectDir().getPath() + "/src/main/res/";
-        for(double dimen = 300; dimen <= 800 ; dimen = dimen + 20){
-            String folder = resFolder + "values-sw" + (int)dimen + "dp";
-            String fileName = folder + "/msp.xml";
-            new File(folder).mkdir();
-            new File(fileName).createNewFile();
-            PrintWriter printWriter = new PrintWriter(fileName);
-            printWriter.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            printWriter.println("<resources>");
-            for(int i=1; i<=positiveMax; i++){
-                double ratio = ((dimen-300d)/400d+1);
-                double sp = ratio*i;
-                printWriter.printf("\t<dimen name=\"_%dmsp\">%.2f" + unit + "</dimen>\r\n",i,sp);
-            }
-            printWriter.println("</resources>");
-            printWriter.close();
-        }
-    }
-}
-    task createSDP(type: SDPFactory) {
-    }
-
-//uncomment next line to edit values
-//preBuild.dependsOn createSDP
-
-    createSDP{
-        unit = "sp"//change to "sp" if needed
-        positiveMax = 600//change to 600 or any other value if needed
-        negativeMax = 60//change to 600 or any other value if needed
-    }
